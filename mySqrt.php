@@ -1,6 +1,9 @@
 <?php
 $stime = microtime(true); #获取程序开始执行的时间
 
+/**
+* 开平方
+*/
 function mySqrt(int $number)
 {
     $temp = $number;
