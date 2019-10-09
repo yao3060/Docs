@@ -1,7 +1,9 @@
 {
     "require": {
         "php-amqplib/php-amqplib": "^2.10",
-        "ext-json": "*"
+        "ext-json": "*",
+        "fzaninotto/faker": "^1.8",
+        "phpseclib/phpseclib": "~2.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^5"
