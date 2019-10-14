@@ -6,8 +6,10 @@
 FROM owasp/modsecurity:latest
 
 RUN set -ex; \
+    mkdir /etc/nginx/modsec; \ 
     wget https://github.com/SpiderLabs/owasp-modsecurity-crs/archive/v3.0.2.tar.gz; \
-    tar -xzf v3.0.2.tar.gz -C /usr/local
+    tar -xzf v3.0.2.tar.gz -C /etc/nginx/modsec; \
+    cp /etc/nginx/modsec/owasp-modsecurity-crs-3.0.2/crs-setup.conf.example /etc/nginx/modsec/owasp-modsecurity-crs-3.0.2/crs-setup.conf
 
 COPY ./src-owasp/src /var/www/html
 ```
@@ -15,7 +17,10 @@ COPY ./src-owasp/src /var/www/html
 ## Create ModSecurity config file in 
 ./src-owasp/.docker/modsecurity.d/include.conf
 ```nginx
-include "/etc/modsecurity.d/modsecurity.conf"
+Include /etc/modsecurity.d/modsecurity.conf
+Include /etc/nginx/modsec/owasp-modsecurity-crs-3.0.2/crs-setup.conf
+Include /etc/nginx/modsec/owasp-modsecurity-crs-3.0.2/rules/*.conf
+
 # enable ModSecurity
 SecRuleEngine On
 
@@ -29,6 +34,7 @@ SecRule REQUEST_URI "@beginsWith /admin" "phase:2,t:lowercase,id:2222,deny,statu
 ```
 
 ## owasp nginx default config file
+/etc/nginx/conf.d/default.conf
 ```nginx
 server {
 
@@ -82,6 +88,7 @@ services:
     volumes:
       - ./src-owasp/.docker/nginx/conf.d:/etc/nginx/conf.d
       - ./src-owasp/.docker/modsecurity.d/include.conf:/etc/modsecurity.d/include.conf
+      - ./src-owasp/.docker/nginx/modsec:/etc/nginx/modsec
       - ./src-owasp/src:/var/www/html
       
   openresty:
