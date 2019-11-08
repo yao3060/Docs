@@ -1,0 +1,54 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>VUE V-Slot</title>
+</head>
+
+<body>
+    <div id="app">
+        <app class="container">
+            <template v-slot="{ userInfo, componentName }">
+                <!-- 在插槽内容能够访问子组件中有的数据 -->
+                <h1>Hello, {{userInfo.firstName}} from {{componentName}}</h1>
+            </template>
+        </app>
+    </div>
+</body>
+
+<!-- development version, includes helpful console warnings -->
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+    const App = {
+        data() {
+            return {
+                profile: {
+                    firstName: 'YY',
+                    lastName: 'YAO',
+                    gender: 'male'
+                },
+                componentName: 'My Component Name'
+            }
+        },
+        template: `
+        <div>
+            <!-- 让 userInfo，componentName 在父级的插槽内容中可用，将他们作为 <slot> 元素的一个特性绑定上去 -->
+            <slot :userInfo="profile" :componentName="componentName"/>
+        </div>
+        `
+    };
+    const vm = new Vue({
+        el: '#app',
+        data() {
+            return {
+                message: 'Hello World',
+            }
+        },
+        components: {
+            app: App
+        }
+    });
+
+</script>
+
+</html>
